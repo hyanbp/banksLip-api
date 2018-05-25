@@ -24,10 +24,11 @@ Esta aplicação usa um banco em memória(H2).
 
 Para ver o painel do h2 é só acessar este link: http://localhost:8090/h2/
 
-Drive class: org.h2.Driver
-JDBC URL: jdbc:h2:~/test
-user: hyan
-password: hyan
+
+* Drive class: org.h2.Driver
+* JDBC URL: jdbc:h2:~/test
+* user: hyan
+* password: hyan
 
 
 ## Swagger
