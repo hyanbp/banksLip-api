@@ -1,79 +1,75 @@
 package com.banksLip.domain;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.UUID;
+import java.time.Period;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Entity
 public class BanksLip {
 
-    @Id
-    private String id;
-    private LocalDate dueDate;
-    private BigDecimal totalInCents;
-    private String customer;
-    private String status;
+	@Id
+	private String id;
+	private LocalDate dueDate;
+	private BigDecimal totalInCents;
+	private String customer;
+	private String status;
 
+	private BanksLip() {
+		// contructor for hibernate
+	}
 
-    public BanksLip(String id,LocalDate dueDate, BigDecimal totalInCents, String customer, String status) {
-        this.id = id;
-        this.dueDate = dueDate;
-        this.totalInCents = totalInCents;
-        this.customer = customer;
-        this.status = status;
-    }
+	public BanksLip(String id, LocalDate dueDate, BigDecimal totalInCents, String customer) {
+		this.id = id;
+		this.dueDate = dueDate;
+		this.totalInCents = totalInCents;
+		this.customer = customer;
+		this.status = Status.PENDING.getDescription();
+	}
 
-    public String getId() {
-        return id;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public LocalDate getDueDate() {
+		return dueDate;
+	}
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	public BigDecimal getTotalInCents() {
+		return totalInCents;
+	}
 
-    public BanksLip() {
-    }
+	public String getCustomer() {
+		return customer;
+	}
 
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
+	public void processStatus(String status) {
+		this.status = Status.valueOf(status).getDescription();
+	}
 
-    public void setDueDate(LocalDate dueDate) {
-        this.dueDate = dueDate;
-    }
+	private BigDecimal getInterest(BigDecimal percent, BigDecimal totalInCents) {
+		percent = percent.divide(new BigDecimal(100));
+		return percent.multiply(totalInCents);
+	}
 
-    public BigDecimal getTotalInCents() {
-        return totalInCents;
-    }
-
-    public void setTotalInCents(BigDecimal totalInCents) {
-        this.totalInCents = totalInCents;
-    }
-
-    public String getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(String customer) {
-        this.customer = customer;
-    }
-
-
-    public enum Status {
+	public BigDecimal getFine() {
+		if (this.dueDate.isBefore(LocalDate.now())) {
+			if (Period.between(this.dueDate, LocalDate.now()).getDays() < 10) {
+				return getInterest(new BigDecimal(0.5), totalInCents);
+			} else {
+				return getInterest(new BigDecimal(1.0), totalInCents);
+			}
+		}
+		return null;
+	}
+	
+	public enum Status {
         PENDING("PENDING"), PAID("PAID"), CANCELED("CANCELED");
 
         private String description;
@@ -88,5 +84,12 @@ public class BanksLip {
         }
 
     }
-}
 
+	@Override
+	public String toString() {
+		return "BanksLip [id=" + id + ", dueDate=" + dueDate + ", totalInCents=" + totalInCents + ", customer="
+				+ customer + ", status=" + status + "]";
+	}
+	
+	
+}

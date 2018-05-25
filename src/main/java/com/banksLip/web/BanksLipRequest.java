@@ -23,6 +23,10 @@ public class BanksLipRequest {
         this.status = status;
     }
 
+    public BanksLipRequest() {
+
+    }
+
     public LocalDate getDueDate() {
         return dueDate;
     }
