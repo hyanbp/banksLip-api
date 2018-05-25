@@ -8,6 +8,9 @@ Para desenvolvimento local são necessários os seguintes itens:
 * maven >= 3.5.x
 * docker
 
+ Porta da aplicação:
+  * Se for rodar via docker a porta é **8090** 
+  * Se for rodar a aplicação via aplicativos (eclipse,intelliJ) a porta á **8080**	
 
 ```
 build:
@@ -99,4 +102,6 @@ Existem quatro serviços na api banksLip que são elas:
  	ex do request - GET
  	
    URL : http://localhost:8090/rest/bankslip
-  
+   
+   
+   
